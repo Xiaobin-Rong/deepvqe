@@ -22,7 +22,7 @@ We are also interested in the inference speed presented in the paper, i.e, a rel
 
 ## Results
 ### 1. SE performance
-We are sorry to find that DeepVQE outperforms DPCRN only with a very limited margin, while requirng for much more computational resources (see below). Besides, DeepVQE is behind TF-GridNet with a relatively large margin.
+We are sorry to find that DeepVQE outperforms DPCRN only with a very limited margin, while requirng for much more computational resources (see below). Besides, DeepVQE lags behind TF-GridNet by a relatively large margin.
 | Model    | Param. (M)| FLOPs (G) |
 |:--------:|:---------:|:---------:|
 |DPCRN     |0.81       |3.73       |
