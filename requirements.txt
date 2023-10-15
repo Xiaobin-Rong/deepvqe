@@ -1,0 +1,7 @@
+einops==0.7.0
+numpy==1.24.4
+onnx==1.14.1
+onnxruntime==1.16.1
+onnxsim==0.4.33
+ptflops==0.7
+torch==1.11.0
