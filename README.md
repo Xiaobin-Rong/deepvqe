@@ -20,13 +20,13 @@ We implement DeepVQE aiming to compare its SE performance with other two SOTA SE
 We are also interested in the inference speed presented in the paper, i.e, a relatively fast speed of 3.66 ms per frame in spite of its large complexity. So we also provide a stream version of DeepVQE, which is utilized to evaluate its inference speed.
 
 ## Requirements
-einops
-numpy
-onnx
-onnxruntime
-onnxsim
-ptflops
-torch==1.11.0
+einops <br/>
+numpy<br/>
+onnx<br/>
+onnxruntime<br/>
+onnxsim<br/>
+ptflops<br/>
+torch==1.11.0<br/>
 
 ## Results
 ### 1. SE performance
