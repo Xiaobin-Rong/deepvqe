@@ -39,4 +39,4 @@ We are sorry to find that DeepVQE outperforms DPCRN only with a very limited mar
 
 
 ### 2. Inference speed 
-We are surprised to find that although DeepVQE requires for large computational resources, it achieves a good real-time factor of 0.2, which is compatible with the speed presented in the paper. 
+We are surprised to find that although DeepVQE requires for large computational resources, it achieves a relatively good real-time factor of 0.2, which corresponds to the data presented in the paper. 
