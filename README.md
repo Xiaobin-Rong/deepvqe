@@ -30,7 +30,7 @@ torch==1.11.0<br/>
 
 ## Results
 ### 1. SE performance
-We are sorry to find that DeepVQE outperforms DPCRN only with a very limited margin, while requirng for much more computational resources (see below). Besides, DeepVQE lags behind TF-GridNet by a relatively large margin.
+We are sorry to find that DeepVQE outperforms DPCRN only with a very limited margin, while requirng for much more computational resources (see below). Besides, DeepVQE lags behind TF-GridNet by a relatively large margin in terms of SE performance.
 | Model    | Param. (M)| FLOPs (G) |
 |:--------:|:---------:|:---------:|
 |DPCRN     |0.81       |3.73       |
