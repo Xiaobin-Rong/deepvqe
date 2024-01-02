@@ -142,6 +142,8 @@ class StreamConvTranspose2d(nn.Module):
             self.T_dilation, self.F_dilation = dilation
         else:
             raise ValueError('Invalid dilation size.')
+
+        assert groups == 1
         
         # 我们使用权重时间反向的Conv2d实现转置卷积    
         self.ConvTranspose2d = nn.Conv2d(in_channels = in_channels, 
@@ -243,8 +245,8 @@ if __name__ == '__main__':
 
 
     # test ConvTranspose2d Stream
-    DeConv = torch.nn.ConvTranspose2d(4, 4, (3,3), (1,2), padding=(0,1), dilation=(1,4), groups=4)
-    SDC = StreamConvTranspose2d(4, 4, (3,3), (1,2), padding=(0,1), dilation=(1,4), groups=4)
+    DeConv = torch.nn.ConvTranspose2d(4, 8, (3,3), (1,2), padding=(0,1), dilation=(1,4), groups=1)
+    SDC = StreamConvTranspose2d(4, 8, (3,3), (1,2), padding=(0,1), dilation=(1,4), groups=1)
     convert_to_stream(SDC, DeConv)
 
     test_input = torch.randn([1,4,10,6])
