@@ -17,12 +17,7 @@ def convert_to_stream(stream_model, model):
 
         elif key.replace('ConvTranspose2d.', '') in state_dict.keys():
             if key.endswith('weight'):
-                groups = getattr(stream_model, key.replace('.weight', '')).groups
-                if groups == 1:
-                    new_state_dict[key] = torch.flip(state_dict[key.replace('ConvTranspose2d.', '')].permute([1,0,2,3]), dims=[-2,-1])
-                else:
-                    # new_state_dict[key] = torch.flip(state_dict[key.replace('ConvTranspose2d.', '')], dims=[-2,-1])
-                    raise ValueError('Invalid group size.')
+                new_state_dict[key] = torch.flip(state_dict[key.replace('ConvTranspose2d.', '')].permute([1,0,2,3]), dims=[-2,-1])
                 
             else:
                 new_state_dict[key] = state_dict[key.replace('ConvTranspose2d.', '')]
