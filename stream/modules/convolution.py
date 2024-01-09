@@ -121,7 +121,16 @@ class StreamConvTranspose2d(nn.Module):
             self.T_pad, self.F_pad = padding
         else:
             raise ValueError('Invalid padding size.')
-        assert self.T_pad == self.T_size-1, "To meet the demands of causal streaming requirements"
+        
+        if type(dilation) is int:
+            self.T_dilation = dilation
+            self.F_dilation = dilation
+        elif type(dilation) in [list, tuple]:
+            self.T_dilation, self.F_dilation = dilation
+        else:
+            raise ValueError('Invalid dilation size.')
+        
+        assert self.T_pad == (self.T_size-1) * self.T_dilation, "To meet the demands of causal streaming requirements"
 
         self.ConvTranspose2d = nn.ConvTranspose2d(in_channels = in_channels, 
                                                 out_channels = out_channels,
