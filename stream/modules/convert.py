@@ -1,4 +1,3 @@
-import torch
 
 
 def convert_to_stream(stream_model, model):
@@ -14,13 +13,9 @@ def convert_to_stream(stream_model, model):
     
         elif key.replace('Conv2d.', '') in state_dict.keys():
             new_state_dict[key] = state_dict[key.replace('Conv2d.', '')]
-
+            
         elif key.replace('ConvTranspose2d.', '') in state_dict.keys():
-            if key.endswith('weight'):
-                new_state_dict[key] = torch.flip(state_dict[key.replace('ConvTranspose2d.', '')].permute([1,0,2,3]), dims=[-2,-1])
-                
-            else:
-                new_state_dict[key] = state_dict[key.replace('ConvTranspose2d.', '')]
+            new_state_dict[key] = state_dict[key.replace('ConvTranspose2d.', '')]
 
         else:
             raise(ValueError('key error!'))
