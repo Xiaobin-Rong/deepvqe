@@ -25,6 +25,9 @@ class StreamConv1d(nn.Module):
                 bias: bool=True,
                 *args, **kargs):
         super(StreamConv1d, self).__init__(*args, *kargs)
+        
+        assert padding == 0, "To meet the demands of causal streaming requirements"
+        
         self.Conv1d = nn.Conv1d(in_channels = in_channels,
                                 out_channels = out_channels,
                                 kernel_size = kernel_size,
@@ -60,6 +63,16 @@ class StreamConv2d(nn.Module):
         """
         kernel_size = [T_size, F_size] by defalut
         """
+        if type(padding) is int:
+            self.T_pad = padding
+            self.F_pad = padding
+        elif type(padding) in [list, tuple]:
+            self.T_pad, self.F_pad = padding
+        else:
+            raise ValueError('Invalid padding size.')
+        
+        assert self.T_pad == 0, "To meet the demands of causal streaming requirements"
+        
         self.Conv2d = nn.Conv2d(in_channels = in_channels, 
                                 out_channels = out_channels,
                                 kernel_size = kernel_size,
@@ -196,19 +209,22 @@ if __name__ == '__main__':
 
         
     ### test ConvTranspose2d Stream
-    DeConv = torch.nn.ConvTranspose2d(4, 8, (3,3), (1,2), padding=(2,1), dilation=(1,4), groups=2)
-    SDeconv = StreamConvTranspose2d(4, 8, (3,3), (1,2), padding=(2,1), dilation=(1,4), groups=2)
+    kt = 3  # kernel size along T axis
+    dt = 2  # dilation along T axis
+    pt = (kt-1) * dt # padding along T axis
+    DeConv = torch.nn.ConvTranspose2d(4, 8, (kt,3), stride=(1,2), padding=(pt,1), dilation=(dt,2), groups=2)
+    SDeconv = StreamConvTranspose2d(4, 8, (kt,3), stride=(1,2), padding=(2*2,1), dilation=(dt,2), groups=2)
     convert_to_stream(SDeconv, DeConv)
 
-    test_input = torch.randn([1,4,10,6])
+    test_input = torch.randn([1, 4, 100, 6])
     with torch.no_grad():
         ## Non-Streaming
-        test_out1 = DeConv(nn.functional.pad(test_input, [0,0,2,0]))  # causal padding!
+        test_out1 = DeConv(nn.functional.pad(test_input, [0,0,pt,0]))  # causal padding!
         test_out1 = test_out1
         ## Streaming
         test_out2 = []
-        cache = torch.zeros([1,4,2,6])
-        for i in range(10):
+        cache = torch.zeros([1, 4, pt, 6])
+        for i in range(100):
             out, cache = SDeconv(test_input[:,:, i:i+1], cache)
             test_out2.append(out)
         test_out2 = torch.cat(test_out2, dim=2)
