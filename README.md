@@ -1,7 +1,7 @@
 # DeepVQE
 A PyTorch implementation of DeepVQE described in [DeepVQE: Real Time Deep Voice Quality Enhancement for Joint Acoustic Echo Cancellation, Noise Suppression and Dereverberation](https://arxiv.org/pdf/2306.03177.pdf).
 
-Pre-trained checkpoint can be found here. Usage:
+Pre-trained checkpoint can be found here: ![deepvqe_trained_on_DNS3.tar](https://drive.google.com/file/d/1pyX0mfQ5HWfpIC45hnImsBvjElo33EXn/view?usp=drive_link). Usage:
 ```
 model = DeepVQE().cuda()
 checkpoint = torch.load('deepvqe_trained_on_DNS3.tar')
