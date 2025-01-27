@@ -1,6 +1,13 @@
 # DeepVQE
 A PyTorch implementation of DeepVQE described in [DeepVQE: Real Time Deep Voice Quality Enhancement for Joint Acoustic Echo Cancellation, Noise Suppression and Dereverberation](https://arxiv.org/pdf/2306.03177.pdf).
 
+Pre-trained checkpoint can be found here. Usage:
+```
+model = DeepVQE().cuda()
+checkpoint = torch.load('deepvqe_trained_on_DNS3.tar')
+model.load_state_dict(checkpoint['model'])
+```
+
 ## About DeepVQE
 ![DeepVQE](https://github.com/Xiaobin-Rong/deepvqe/blob/main/pictures/DeepVQE.PNG)
 DeepVQE is a speech enhancement (SE) model proposed by Microsoft for joint echo cancellation, noise suppression and dereverberation, which outperforms the top 1 models in both 2023 DNS Challenge and 2023 AEC Challenge.
