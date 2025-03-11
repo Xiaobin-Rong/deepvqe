@@ -3,9 +3,25 @@ A PyTorch implementation of DeepVQE described in [DeepVQE: Real Time Deep Voice 
 
 Pre-trained checkpoint can be found here: [deepvqe_trained_on_DNS3.tar](https://drive.google.com/file/d/1pyX0mfQ5HWfpIC45hnImsBvjElo33EXn/view?usp=drive_link). Usage:
 ```
+import soundfile as sf
+
 model = DeepVQE().cuda()
 checkpoint = torch.load('deepvqe_trained_on_DNS3.tar')
 model.load_state_dict(checkpoint['model'])
+
+x, fs = sf.read('test.wav', dtype='float32')  # x: (n_samples,), single channel, 16 kHz
+x = torch.from_numpy(x).unsqueeze(0)  # (B=1, n_samples)
+
+orig_len = x.shape[-1]
+x = torch.stft(x, 512, 256, 512, torch.hann_window(512), return_complex=True)
+x = torch.view_as_real(x)  # (B=1,F=257,T,2)
+
+with torch.no_grad():
+    y = model(x)  # (B=1,F=257,T,2)
+y = torch.complex(y[...,0], y[...,1])
+y = torch.istft(y, 512, 256, 512, torch.hann_window(512))  # (B, n_samples)
+
+y = torch.nn.functional.pad(y, [0, orig_len-y.shape[-1]])
 ```
 
 ## About DeepVQE
@@ -17,6 +33,8 @@ DeepVQE utilizes the U-Net architecture as backbone, while makes some improvemen
 * Add residual block for each block in encoder and decoder.
 * Use sub-pixel convolution instead of transposed convolution for up-sampling.
 * A novel mask mechanism named complex convolving mask (CCM).
+
+**About the differences of `deepvqe.py` and `deepvqe_v1.py`**: The only difference between the two lies in the implementation of the CCM module, where `deepvqe.py` utilizes real number multiplication exclusively, while `deepvqe_v1.py` uses complex number multiplication. It is believed that these two different implementation methods will not have any impact on the results. Personally, a preference is leaned towards the use of real number multiplication due to its greater compatibility with multiple platforms.
 
 ## Our purpose
 We implement DeepVQE aiming to compare its SE performance with other two SOTA SE models, [DPCRN](https://arxiv.org/pdf/2107.05429.pdf) and [TF-GridNet](https://arxiv.org/pdf/2211.12433.pdf). To this end, We modify some experimental setup in the original paper, specifically:
